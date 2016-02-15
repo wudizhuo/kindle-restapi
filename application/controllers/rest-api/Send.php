@@ -4,7 +4,8 @@ if (!defined('BASEPATH'))
 
 //require_once('./application/libraries/REST_Controller.php');
 
-include './application/controllers/V2/entity/SendHtmlEntity.php';
+include './application/libraries/REST_Controller.php';
+include './application/controllers/rest-api/entity/SendHtmlEntity.php';
 include './application/utils/CurlUtil.php';
 include './application/utils/UrlParseAdapter.php';
 include './application/utils/HtmlExtract.php';
@@ -15,9 +16,6 @@ class Send extends REST_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->library(array(
-            'AppSecurity'
-        ));
         $this->load->model(array(
             'MSendRecord'
         ));
