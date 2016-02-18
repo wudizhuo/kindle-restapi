@@ -5,12 +5,12 @@ if (!defined('BASEPATH'))
 class HtmlExtract
 {
 
-    function getReadabilityHtml($url)
+    public static function getReadabilityHtml($url)
     {
         $result = null;
         $html = self::get_contents_from_url($url);
 
-        $this->CI = &get_instance();
+        $CI = &get_instance();
 
         if (UrlParseAdapter::is_zhzl($url)) {
 
@@ -21,9 +21,9 @@ class HtmlExtract
                 'articleContent' => $zhzl_json['content']
             );
 
-            $this->CI->load->library('HtmlEntity', $data);
+            $CI->load->library('HtmlEntity', $data);
 
-            $result = $this->CI->htmlentity;
+            $result = $CI->htmlentity;
         } else if (UrlParseAdapter::is_zh($url)) {
             $readabilityApi = "https://www.readability.com/api/content/v1/parser?url=" . $url . '&token=7ace6330e4dfcf6dfb2cacb8f11e5b4ee1a487d9';
             $urlContent = CurlUtil::get_contents_from_url($readabilityApi);
@@ -34,9 +34,9 @@ class HtmlExtract
                 'articleTitle' => $readability_json['title'],
                 'articleContent' => $readability_json['content']
             );
-            $this->CI->load->library('HtmlEntity', $data);
+            $CI->load->library('HtmlEntity', $data);
 
-            $result = $this->CI->htmlentity;
+            $result = $CI->htmlentity;
         } else {
             $result = self::get_cotent_from_readablitylib($url, $html);
         }
@@ -50,15 +50,17 @@ class HtmlExtract
      * @param $html
      * @return null
      */
-    function get_cotent_from_readablitylib($url, $html)
+    public static function get_cotent_from_readablitylib($url, $html)
     {
         $data = array(
             'html' => $html,
             'url' => $url
         );
 
-        $this->CI->load->library('Readability', $data);
-        $readability = $this->CI->readability;
+        $CI = &get_instance();
+
+        $CI->load->library('Readability', $data);
+        $readability = $CI->readability;
         // Note: PHP Readability expects UTF-8 encoded content.
         // If your content is not UTF-8 encoded, convert it
         // first before passing it to PHP Readability.
@@ -101,9 +103,9 @@ class HtmlExtract
                 'articleContent' => $content
             );
 
-            $this->CI->load->library('HtmlEntity', $data);
+            $CI->load->library('HtmlEntity', $data);
 
-            $result = $this->CI->htmlentity;
+            $result = $CI->htmlentity;
         } else {
             $result = null;
         }
@@ -118,10 +120,10 @@ class HtmlExtract
      *            $url
      * @return string
      */
-    function get_contents_from_url($url)
+    public static function get_contents_from_url($url)
     {
         $urlContent = CurlUtil::curl($url);
-        $charset = $this->get_charset($urlContent);
+        $charset = self::get_charset($urlContent);
         if ($charset && $charset != 'utf-8') {
             $urlContent = iconv($charset, "UTF-8//IGNORE", $urlContent);
         }
@@ -134,7 +136,7 @@ class HtmlExtract
      * @param unknown $urlContent
      * @return string
      */
-    function get_charset($urlContent)
+    public static function get_charset($urlContent)
     {
         return preg_match("/<meta.+?charset=[^\w]?([-\w]+)/i", $urlContent, $temp) ? strtolower($temp[1]) : "";
     }

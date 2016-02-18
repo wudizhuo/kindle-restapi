@@ -33,7 +33,7 @@ class CurlUtil
         return $urlContent;
     }
 
-    function curl_redir_exec($ch, $url)
+    public static function curl_redir_exec($ch, $url)
     {
         static $curl_loops = 0;
         static $curl_max_loops = 20;
@@ -83,7 +83,7 @@ class CurlUtil
      *            是否带header头信息 用于302跳转
      * @return resource
      */
-    function getCurl($url, $timeout = 5, $is_has_head = FALSE)
+    public static function getCurl($url, $timeout = 5, $is_has_head = FALSE)
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);

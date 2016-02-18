@@ -5,10 +5,11 @@ if (!defined('BASEPATH'))
 //require_once('./application/libraries/REST_Controller.php');
 
 include './application/libraries/REST_Controller.php';
-include './application/controllers/rest-api/entity/SendHtmlEntity.php';
+include './application/controllers/v3/entity/SendHtmlEntity.php';
 include './application/utils/CurlUtil.php';
 include './application/utils/UrlParseAdapter.php';
 include './application/utils/HtmlExtract.php';
+include './application/utils/UrlUtil.php';
 
 class Send extends REST_Controller
 {
@@ -26,45 +27,48 @@ class Send extends REST_Controller
         $fromEmail = $this->post('from_email');
 
         if (!$this->email->valid_email($fromEmail)) {
-            $res["status"] = "3";
-            $res["msg"] = "请填写正确的发送邮箱";
-            $this->_return($res);
+            $res["code"] =ERROR_CODE_FROM_EMAIL;
+            $res["error"] = "请填写正确的发送邮箱";
+            $this->response($res, 400);
         }
 
         $toEmail = $this->post('to_email');
 
         if (!$this->email->valid_email($toEmail)) {
-            $res["status"] = "3";
-            $res["msg"] = "请填写正确的接收邮箱";
-            $this->_return($res);
+            $res["code"] =ERROR_CODE_TO_EMAIL;
+            $res["error"] = "请填写正确的接收邮箱";
+            $this->response($res, 400);
         }
 
         $url = UrlParseAdapter::parse_url($this->post('url'));
 
-        if (!$this->valid_url($url)) {
-            $res["status"] = "2";
-            $res["msg"] = "请填写正确的网址";
-            $this->createRecord($status = $res["status"], $url, $fromEmail, $toEmail);
-            $this->_return($res);
+        if (!UrlUtil::valid_url($url)) {
+            $res["code"] =ERROR_CODE_INVALID_URL;
+            $res["error"] = "请填写正确的网址";
+            $this->createRecord($status = 2, $url, $fromEmail, $toEmail);
+            $this->response($res, 400);
         }
 
-        $app_id = $this->appsecurity->check_app_id();
+        //TODO 配置数据库操作 code
+        //TODO 当数据失败时候  数据库保存的status 值的修改
+
+        //TODO code next code 获取app _id 的操作
+        $app_id = 0;
 
         $isUrlDuplicate = $this->MSendRecord->isUrlDuplicate($app_id, $url);
 
         //1分钟内已经发送过 不再发送
         if ($isUrlDuplicate) {
-            $res["msg"] = '发送成功';
-            $this->_return($res);
+            $this->response(null, 201);
         }
 
         $htmlModel = HtmlExtract::getReadabilityHtml($url);
 
         if (!$htmlModel) {
-            $res["status"] = "1";
-            $res["msg"] = '没有找到要发送的内容';
-            $this->createRecord($status = $res["status"], $url, $fromEmail, $toEmail);
-            $this->_return($res);
+            $res["error"] = '没有找到要发送的内容';
+            //TODO code create Record status change code
+            $this->createRecord($status = 1, $url, $fromEmail, $toEmail);
+            $this->response($res, 404);
         }
 
         $sendHtmlEntity = new SendHtmlEntity($url, $fromEmail, $toEmail, $htmlModel->getArticleTitle(), $htmlModel->getArticleContent());
@@ -90,14 +94,38 @@ class Send extends REST_Controller
         }
 
         if ($this->email->send()) {
-            $res["status"] = 0;
+            $this->response(null, 201);
         } else {
-            $res["status"] = -1;
+            $res["error"] = '发送失败,请联系作者';
+            $this->response($res, 500);
         }
+    }
 
-        // $this->email->print_debugger();
+    private function createRecord($status = 0, $url, $fromEmail, $toEmail, $title = "", $content = "")
+    {
+//        $app_id = $this->appsecurity->check_app_id();
+        //TODO code next code 获取app _id 的操作
+        $app_id = 0;
+        //TODO code next code 获取version 的操作
+//        $app_version = $this->appsecurity->check_app_version();
+        $app_version = "";
+        $sendHtmlEntity = new SendHtmlEntity($url, $fromEmail, $toEmail, $title, $content);
+        $this->MSendRecord->create_record($app_id, $app_version, $sendHtmlEntity, $status);
+    }
 
-        $this->_return($res);
+    public function genMobi($htmlPath)
+    {
+        // 添加转义字符 将空格 ：单引号等特殊字符转义
+        $htmlPathTmp = addslashes($htmlPath);
+        $htmlPathTmp = addcslashes($htmlPathTmp, ' ');
+        $htmlPathTmp = addcslashes($htmlPathTmp, '&');
+        $htmlPathTmp = addcslashes($htmlPathTmp, ':');
+        $htmlPathTmp = addcslashes($htmlPathTmp, '(');
+        $htmlPathTmp = addcslashes($htmlPathTmp, ')');
+        $htmlPathTmp = addcslashes($htmlPathTmp, '|');
+
+        exec('./kindlegen ' . "$htmlPathTmp", $log);
+        return str_replace(".html", ".mobi", $htmlPath);
     }
 
 }
