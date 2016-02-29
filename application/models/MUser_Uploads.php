@@ -1,6 +1,6 @@
 <?php
-class MUser_Upload_error_logs extends MY_Model {
-    protected $table = "user_upload_error_logs";
+class MUser_Uploads extends CI_Model {
+    protected $table = "user_uploads";
 
     function __construct() {
         parent::__construct($this->table);
@@ -11,5 +11,11 @@ class MUser_Upload_error_logs extends MY_Model {
         $this->db->where('app_uid', $users_app_uid);
         $res = $this->db->get($this->table);
         return $res ? $res->result_array() : array();
+    }
+
+    public function add($data)
+    {
+        $this->db->insert($this->table, $data);
+        return $this->db->insert_id();
     }
 }
