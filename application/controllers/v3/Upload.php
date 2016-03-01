@@ -16,9 +16,8 @@ class Upload extends REST_Controller
     public function index_post()
     {
         $fromEmail = $this->post('from_email');
-
         if (!$this->email->valid_email($fromEmail)) {
-            $res["code"] =ERROR_CODE_FROM_EMAIL;
+            $res["code"] = ERROR_CODE_FROM_EMAIL;
             $res["error"] = "请填写正确的发送邮箱";
             $this->response($res, 400);
         }
@@ -26,7 +25,7 @@ class Upload extends REST_Controller
         $toEmail = $this->post('to_email');
 
         if (!$this->email->valid_email($toEmail)) {
-            $res["code"] =ERROR_CODE_TO_EMAIL;
+            $res["code"] = ERROR_CODE_TO_EMAIL;
             $res["error"] = "请填写正确的接收邮箱";
             $this->response($res, 400);
         }
@@ -76,22 +75,19 @@ class Upload extends REST_Controller
                     'created_time' => time(),
                 )
             );
-            $path = explode('/', $data['full_path']);
-            unset($path[0]);
-            unset($path[1]);
-            unset($path[2]);
-            $path = implode('/', $path);
-            if ($insert > 0) {
-                $this->email->from($fromEmail, 'kindle_assistant');
-                $this->email->to($toEmail);
-                $this->email->bcc('kindleassistant@126.com');
-                $this->email->attach($path);
-                $this->email->subject($data['file_name'] . '__用户上传');
-                $this->email->send();
+            $path = $data['full_path'];
+            $this->email->clear(TRUE);
+            $this->email->from($fromEmail, 'kindle_assistant');
+            $this->email->to($toEmail);
+            $this->email->bcc('kindleassistant@126.com');
+            $this->email->attach($path);
+            $this->email->subject($data['file_name'] . '__用户上传');
 
+            if ($this->email->send()) {
                 $this->response(null, 201);
             } else {
                 $res["error"] = '发送失败,请联系作者';
+                $res["exception"] = $this->email->print_debugger(array('headers'));
                 $this->response($res, 500);
             }
         }
