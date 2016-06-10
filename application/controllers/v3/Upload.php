@@ -56,7 +56,7 @@ class Upload extends REST_Controller
                 )
 
             );
-            $res["error"] = '获取附件内容,请检查文件格式';
+            $res["error"] = '文件格式不支持,请检查文件格式';
             $res["msg"] = $error['error'];
             $this->response($res, 404);
         } else {
