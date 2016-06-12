@@ -1,4 +1,4 @@
-<?
+<?php
 
 class UrlParseAdapter
 {
@@ -101,5 +101,3 @@ class UrlParseAdapter
         }
     }
 }
-
-?>

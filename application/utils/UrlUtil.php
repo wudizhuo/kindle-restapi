@@ -1,4 +1,4 @@
-<?
+<?php
 
 class UrlUtil
 {
@@ -7,5 +7,3 @@ class UrlUtil
         return preg_match("/^http|https:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"])*$/", $str);
     }
 }
-
-?>

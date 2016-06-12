@@ -1,4 +1,4 @@
-<?
+<?php
 
 class CurlUtil
 {
@@ -94,5 +94,3 @@ class CurlUtil
         return $curl;
     }
 }
-
-?>
