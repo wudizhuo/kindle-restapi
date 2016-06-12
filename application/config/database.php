@@ -75,9 +75,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
+	'hostname' => 'mysql',
 	'username' => 'root',
-	'password' => '110210',
+	'password' => '123456',
 	'database' => 'kindle_assistant',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
