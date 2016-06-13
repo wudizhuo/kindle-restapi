@@ -55,12 +55,12 @@ class Send extends REST_Controller
         //TODO code next code 获取app _id 的操作
         $app_id = 0;
 
-        $isUrlDuplicate = $this->MSendRecord->isUrlDuplicate($app_id, $url);
+        // $isUrlDuplicate = $this->MSendRecord->isUrlDuplicate($app_id, $url);
 
-        //1分钟内已经发送过 不再发送
-        if ($isUrlDuplicate) {
-            $this->response(null, 201);
-        }
+        // //1分钟内已经发送过 不再发送
+        // if ($isUrlDuplicate) {
+        //     $this->response(null, 201);
+        // }
 
         $htmlModel = HtmlExtract::getReadabilityHtml($url);
 
@@ -110,7 +110,7 @@ class Send extends REST_Controller
 //        $app_version = $this->appsecurity->check_app_version();
         $app_version = "";
         $sendHtmlEntity = new SendHtmlEntity($url, $fromEmail, $toEmail, $title, $content);
-        $this->MSendRecord->create_record($app_id, $app_version, $sendHtmlEntity, $status);
+        // $this->MSendRecord->create_record($app_id, $app_version, $sendHtmlEntity, $status);
     }
 
     public function genMobi($htmlPath)

@@ -44,16 +44,16 @@ class Upload extends REST_Controller
 
         if (!$this->upload->do_upload('file')) {
             $error = array('error' => $this->upload->display_errors());
-            $this->load->model('MUser_Upload_error_logs');
-            $insert = $this->MUser_Upload_error_logs->add(
-                array(
-                    'app_uid' => 0,
-                    'error_reason' => $error['error'],
-                    'from_email' => $fromEmail,
-                    'to_email' => $toEmail,
-                    'file_name' => $fileName,
-                    'created_time' => time(),
-                )
+            // $this->load->model('MUser_Upload_error_logs');
+            // $insert = $this->MUser_Upload_error_logs->add(
+            //     array(
+            //         'app_uid' => 0,
+            //         'error_reason' => $error['error'],
+            //         'from_email' => $fromEmail,
+            //         'to_email' => $toEmail,
+            //         'file_name' => $fileName,
+            //         'created_time' => time(),
+            //     )
 
             );
             $res["error"] = '文件格式不支持,请检查文件格式';
@@ -62,18 +62,18 @@ class Upload extends REST_Controller
         } else {
             $this->load->model('MUser_Uploads');
             $data = $this->upload->data();
-            $insert = $this->MUser_Uploads->add(
-                array(
-                    'app_uid' => 0,
-                    'from_email' => $fromEmail,
-                    'to_email' => $toEmail,
-                    'file_path' => $data['file_path'],
-                    'full_path' => $data['full_path'],
-                    'file_type' => $data['file_type'],
-                    'file_name' => $data['file_name'],
-                    'file_size' => $data['file_size'],
-                    'created_time' => time(),
-                )
+            // $insert = $this->MUser_Uploads->add(
+            //     array(
+            //         'app_uid' => 0,
+            //         'from_email' => $fromEmail,
+            //         'to_email' => $toEmail,
+            //         'file_path' => $data['file_path'],
+            //         'full_path' => $data['full_path'],
+            //         'file_type' => $data['file_type'],
+            //         'file_name' => $data['file_name'],
+            //         'file_size' => $data['file_size'],
+            //         'created_time' => time(),
+            //     )
             );
             $path = $data['full_path'];
             $this->email->clear(TRUE);
