@@ -96,7 +96,7 @@ class SendHtmlEntity
 
     public function saveHtml2Local()
     {
-        $htmlPath = './html_record/' 
+        $htmlPath = './html_record/';
         if (!is_dir($htmlPath)) {
             mkdir($htmlPath, 0744);
         }
