@@ -25,7 +25,7 @@ class Send extends REST_Controller
     public function index_post()
     {
         $fromEmail = $this->post('from_email');
-
+        echo "$fromEmail--"+$fromEmail;
         if (!$this->email->valid_email($fromEmail)) {
             $res["code"] =ERROR_CODE_FROM_EMAIL;
             $res["error"] = "请填写正确的发送邮箱";
