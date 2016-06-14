@@ -94,7 +94,7 @@ class Send extends REST_Controller
         }
 
         if ($this->email->send()) {
-            $res["error"] = '发送失败,请联系作者';
+            $res["error"] = '抱歉，今天服务器维护，请明天使用';
             $this->response($res, 500);
             // $this->response(null, 201);
         } else {
