@@ -94,7 +94,9 @@ class Send extends REST_Controller
         }
 
         if ($this->email->send()) {
-            $this->response(null, 201);
+            $res["error"] = '发送失败,请联系作者';
+            $this->response($res, 500);
+            // $this->response(null, 201);
         } else {
             $res["error"] = '发送失败,请联系作者';
             $this->response($res, 500);
