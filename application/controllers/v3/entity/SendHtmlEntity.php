@@ -96,8 +96,7 @@ class SendHtmlEntity
 
     public function saveHtml2Local()
     {
-        $tmpHandle = tmpfile();
-        $htmlPath = stream_get_meta_data($tmpHandle)['uri'];
+        $htmlPath = tempnam(sys_get_temp_dir(), 'kindle');
 
         // 匹配图片下载正则
         $pattern_src = '/<img[\s\S]*?src\s*=\s*[\"|\'](.*?)[\"|\'][\s\S]*?>/';
