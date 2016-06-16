@@ -126,11 +126,11 @@ class SendHtmlEntity
         // $img=file_get_contents($imgurl);
         $img = CurlUtil::curl($imgurl);
         if (!empty($img)) {
-            // 保存图片 需要加后缀 如果有问题需要判断具体是jpg或png现在写固定为png
-            $tmpHandle = tmpfile();
-            $imgPath = stream_get_meta_data($tmpHandle)['uri'];
-            @fwrite($tmpHandle, $img);
-            @fseek($tmpHandle, 0);
+            $imgPath = tempnam(sys_get_temp_dir(), 'kindle_img');
+
+            $fp = @fopen($imgPath, "w"); // 以写方式打开文件
+            @fwrite($fp, $img);
+            fclose($fp);
         }
 
         return '<img src=' . $imgPath . '>';
