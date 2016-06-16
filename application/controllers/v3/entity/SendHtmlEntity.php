@@ -102,24 +102,6 @@ class SendHtmlEntity
         // 匹配图片下载正则
         $pattern_src = '/<img[\s\S]*?src\s*=\s*[\"|\'](.*?)[\"|\'][\s\S]*?>/';
 
-        preg_match_all($pattern_src, $this->toHtml(), $match);
-
-        // 下载图片并保存
-        foreach ($match[1] as $imgurl) {
-            if (!is_int(strpos($imgurl, 'http'))) {
-                continue;
-            }
-            // $img=file_get_contents($imgurl);
-            $img = CurlUtil::curl($imgurl);
-            if (!empty($img)) {
-                // 保存图片 需要加后缀 如果有问题需要判断具体是jpg或png现在写固定为png
-                $imgPath = $htmlPath . md5($imgurl) . '.jpg';
-                $fp = @fopen($imgPath, 'wb');
-                @fwrite($fp, $img);
-                fclose($fp);
-            }
-        }
-
         // 正则替换图片
         $html = preg_replace_callback($pattern_src, "self::changeImgLocal", $this->toHtml());
 
@@ -136,7 +118,19 @@ class SendHtmlEntity
      */
     private function changeImgLocal($matches)
     {
-        die('$matches'.$matches);
-        return '<img src=' . md5($matches[1]) . '.jpg >';
+        $imgurl = $matches[1];
+        if (!is_int(strpos($imgurl, 'http'))) {
+            return;
+        }
+        // $img=file_get_contents($imgurl);
+        $img = CurlUtil::curl($imgurl);
+        if (!empty($img)) {
+            // 保存图片 需要加后缀 如果有问题需要判断具体是jpg或png现在写固定为png
+            $tmpHandle = tmpfile();
+            $imgPath = stream_get_meta_data($tmpHandle)['uri'];
+            @fwrite($tmpHandle, $img);
+        }
+
+        return '<img src=' . $imgPath . '>';
     }
 }
