@@ -104,9 +104,9 @@ class SendHtmlEntity
         // 正则替换图片
         $html = preg_replace_callback($pattern_src, "self::changeImgLocal", $this->toHtml());
 
-        @fwrite($htmlPath, $html);
-
-        fclose($htmlPath);
+        $fp = @fopen($htmlPath, "w"); // 以写方式打开文件
+        @fwrite($fp, $html);
+        fclose($fp);
 
         return $htmlPath;
     }
