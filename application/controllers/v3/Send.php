@@ -25,17 +25,17 @@ class Send extends REST_Controller
     public function index_post()
     {
         $fromEmail = $this->post('from_email');
-        
+
         if (!$this->email->valid_email($fromEmail)) {
-            $res["code"] =ERROR_CODE_FROM_EMAIL;
-            $res["error"] = "请填写正确的发送邮箱  error"+$fromEmail;
+            $res["code"] = ERROR_CODE_FROM_EMAIL;
+            $res["error"] = "请填写正确的发送邮箱  error" + $fromEmail;
             $this->response($res, 400);
         }
 
         $toEmail = $this->post('to_email');
 
         if (!$this->email->valid_email($toEmail)) {
-            $res["code"] =ERROR_CODE_TO_EMAIL;
+            $res["code"] = ERROR_CODE_TO_EMAIL;
             $res["error"] = "请填写正确的接收邮箱";
             $this->response($res, 400);
         }
@@ -43,7 +43,7 @@ class Send extends REST_Controller
         $url = UrlParseAdapter::parse_url($this->post('url'));
 
         if (!UrlUtil::valid_url($url)) {
-            $res["code"] =ERROR_CODE_INVALID_URL;
+            $res["code"] = ERROR_CODE_INVALID_URL;
             $res["error"] = "请填写正确的网址";
             $this->createRecord($status = 2, $url, $fromEmail, $toEmail);
             $this->response($res, 400);
@@ -115,15 +115,8 @@ class Send extends REST_Controller
 
     public function genMobi($htmlPath)
     {
-        // 添加转义字符 将空格 ：单引号等特殊字符转义
-        $htmlPathTmp = addslashes($htmlPath);
-        $htmlPathTmp = addcslashes($htmlPathTmp, ' ');
-        $htmlPathTmp = addcslashes($htmlPathTmp, '&');
-        $htmlPathTmp = addcslashes($htmlPathTmp, ':');
-        $htmlPathTmp = addcslashes($htmlPathTmp, '(');
-        $htmlPathTmp = addcslashes($htmlPathTmp, ')');
-        $htmlPathTmp = addcslashes($htmlPathTmp, '|');
-
+        $htmlPathTmp = $htmlPath . ".html";
+        rename($htmlPath, $htmlPathTmp);
         exec('kindlegen ' . "$htmlPathTmp", $log);
         return str_replace(".html", ".mobi", $htmlPath);
     }
