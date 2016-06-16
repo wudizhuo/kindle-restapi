@@ -104,8 +104,7 @@ class SendHtmlEntity
         // 正则替换图片
         $html = preg_replace_callback($pattern_src, "self::changeImgLocal", $this->toHtml());
 
-        @fwrite($tmpHandle, $html);
-        @fseek($tmpHandle, 0);
+        @fwrite($htmlPath, $html);
 
         return $htmlPath;
     }
