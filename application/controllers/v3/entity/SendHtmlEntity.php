@@ -96,7 +96,7 @@ class SendHtmlEntity
 
     public function saveHtml2Local()
     {
-        $htmlPath = './html_record/';
+        $htmlPath = '/tmp/html_record/';
         if (!is_dir($htmlPath)) {
             mkdir($htmlPath, 0744);
         }
@@ -134,11 +134,11 @@ class SendHtmlEntity
 
         // 正则替换图片
         $html = preg_replace_callback($pattern_src, "self::changeImgLocal", $this->toHtml());
-        // Html文件保存
-        $htmlPath = $htmlPath . $this->getArticleTitle() . '.html';
-        $fp = @fopen($htmlPath, "w"); // 以写方式打开文件
-        @fwrite($fp, $html);
-        fclose($fp);
+
+        $tmpHandle = tmpfile();
+        $htmlPath = stream_get_meta_data($tmpHandle)['uri'];
+        @fwrite($tmpHandle, $html);
+
         return $htmlPath;
     }
 
