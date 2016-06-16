@@ -96,22 +96,8 @@ class SendHtmlEntity
 
     public function saveHtml2Local()
     {
-        /**
-
-        $htmlPath = '/tmp/html_record/';
-        if (!is_dir($htmlPath)) {
-            mkdir($htmlPath, 0744);
-        }
-
-        $htmlPath = $htmlPath . date('y-m'). '/';
-        if (!is_dir($htmlPath)) {
-            mkdir($htmlPath, 0744);
-        }
-
-        $htmlPath = $htmlPath . date('d') . '/';
-        if (!is_dir($htmlPath)) {
-            mkdir($htmlPath, 0744);
-        }
+        $tmpHandle = tmpfile();
+        $htmlPath = stream_get_meta_data($tmpHandle)['uri'];
 
         // 匹配图片下载正则
         $pattern_src = '/<img[\s\S]*?src\s*=\s*[\"|\'](.*?)[\"|\'][\s\S]*?>/';
@@ -136,11 +122,8 @@ class SendHtmlEntity
 
         // 正则替换图片
         $html = preg_replace_callback($pattern_src, "self::changeImgLocal", $this->toHtml());
-         *
-         */
-        $tmpHandle = tmpfile();
-        $htmlPath = stream_get_meta_data($tmpHandle)['uri'];
-        @fwrite($tmpHandle, $this->toHtml());
+
+        @fwrite($tmpHandle, $html);
 
         return $htmlPath;
     }
@@ -153,6 +136,7 @@ class SendHtmlEntity
      */
     private function changeImgLocal($matches)
     {
+        die('$matches'.$matches);
         return '<img src=' . md5($matches[1]) . '.jpg >';
     }
 }
