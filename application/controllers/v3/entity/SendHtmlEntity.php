@@ -106,6 +106,8 @@ class SendHtmlEntity
 
         @fwrite($htmlPath, $html);
 
+        fclose($htmlPath);
+
         return $htmlPath;
     }
 
