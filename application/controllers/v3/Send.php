@@ -118,7 +118,7 @@ class Send extends REST_Controller
         $htmlPathTmp = $htmlPath . ".html";
         rename($htmlPath, $htmlPathTmp);
         exec('kindlegen ' . "$htmlPathTmp", $log);
-        return str_replace(".html", ".mobi", $htmlPath);
+        return str_replace(".html", ".mobi", $htmlPathTmp);
     }
 
 }
