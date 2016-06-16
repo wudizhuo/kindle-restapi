@@ -106,6 +106,7 @@ class SendHtmlEntity
         $html = preg_replace_callback($pattern_src, "self::changeImgLocal", $this->toHtml());
 
         @fwrite($tmpHandle, $html);
+        @fseek($tmpHandle, 0);
 
         return $htmlPath;
     }
@@ -129,6 +130,7 @@ class SendHtmlEntity
             $tmpHandle = tmpfile();
             $imgPath = stream_get_meta_data($tmpHandle)['uri'];
             @fwrite($tmpHandle, $img);
+            @fseek($tmpHandle, 0);
         }
 
         return '<img src=' . $imgPath . '>';
