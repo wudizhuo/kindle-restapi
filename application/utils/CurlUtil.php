@@ -6,17 +6,28 @@ class CurlUtil
     // 抓取网页内容
     public static function curl($url, $timeout = 5)
     {
-        $curl = self::getCurl($url, $timeout);
-        $values = curl_exec($curl);
-        $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+//        $curl = self::getCurl($url, $timeout);
+//        $values = curl_exec($curl);
+//        $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+//
+//        if ($http_code != 200) {
+//            if ($http_code == 301 || $http_code == 302) {
+//                $values = self::curl_redir_exec($curl, $url);
+//            }
+//        }
+//
+//        curl_close($curl);
 
-        if ($http_code != 200) {
-            if ($http_code == 301 || $http_code == 302) {
-                $values = self::curl_redir_exec($curl, $url);
-            }
-        }
+        $context = stream_context_create(
+            array(
+                'http' => array(
+                    'follow_location' => false
+                )
+            )
+        );
 
-        curl_close($curl);
+        $values = file_get_contents('http://www.example.com/', false, $context);
+
         return $values;
     }
 
