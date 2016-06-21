@@ -10,6 +10,7 @@ include './application/utils/CurlUtil.php';
 include './application/utils/UrlParseAdapter.php';
 include './application/utils/HtmlExtract.php';
 include './application/utils/UrlUtil.php';
+include './application/utils/Snoopy.class.php';
 
 class Preview extends REST_Controller
 {

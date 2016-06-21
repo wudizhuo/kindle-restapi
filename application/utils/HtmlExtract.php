@@ -7,6 +7,13 @@ class HtmlExtract
 
     public static function getReadabilityHtml($url)
     {
+        if(true){
+            $snoopy = new Snoopy;
+            $snoopy->fetch($url);
+            echo $snoopy->results;
+            return $snoopy->results;
+        }
+
         $result = null;
         $html = self::get_contents_from_url($url);
 
