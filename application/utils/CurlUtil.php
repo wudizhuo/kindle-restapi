@@ -26,7 +26,7 @@ class CurlUtil
             )
         );
 
-        $values = file_get_contents('http://www.example.com/', false, $context);
+        $values = file_get_contents($url, false, $context);
 
         return $values;
     }
