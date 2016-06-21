@@ -4,7 +4,7 @@ class CurlUtil
 {
 
     // 抓取网页内容
-    public static function curl($url, $timeout = 5)
+    public static function curl($url, $timeout = 15)
     {
         $curl = self::getCurl($url, $timeout);
         $values = curl_exec($curl);
@@ -83,12 +83,13 @@ class CurlUtil
      *            是否带header头信息 用于302跳转
      * @return resource
      */
-    public static function getCurl($url, $timeout = 5, $is_has_head = FALSE)
+    public static function getCurl($url, $timeout = 15, $is_has_head = FALSE)
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HEADER, $is_has_head);
         curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, TRUE);
         curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 6.0; SeaPort/1.2; Windows NT 5.1; SV1; InfoPath.2)");
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         return $curl;
