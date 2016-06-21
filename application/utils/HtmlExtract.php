@@ -7,13 +7,6 @@ class HtmlExtract
 
     public static function getReadabilityHtml($url)
     {
-        if(true){
-            $snoopy = new Snoopy;
-            $snoopy->fetch($url);
-            echo $snoopy->results;
-            return $snoopy->results;
-        }
-
         $result = null;
         $html = self::get_contents_from_url($url);
 
@@ -129,7 +122,9 @@ class HtmlExtract
      */
     public static function get_contents_from_url($url)
     {
-        $urlContent = CurlUtil::curl($url);
+        $snoopy = new Snoopy;
+        $snoopy->fetch($url);
+        $urlContent = $snoopy->results;
         $charset = self::get_charset($urlContent);
         if ($charset && $charset != 'utf-8') {
             $urlContent = iconv($charset, "UTF-8//IGNORE", $urlContent);
