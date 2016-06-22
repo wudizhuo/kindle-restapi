@@ -7,10 +7,16 @@ class HtmlExtract
 
     public static function getReadabilityHtml($url)
     {
-        $result = null;
+        $CI = &get_instance();
+        if (UrlParseAdapter::is_zh($url)) {
+            return self::getContentFromReadabilityApi($url, $CI);
+        }
+
         $html = self::get_contents_from_url($url);
 
-        $CI = &get_instance();
+        if($html == null){
+            return self::getContentFromReadabilityApi($url, $CI);
+        }
 
         if (UrlParseAdapter::is_zhzl($url)) {
 
@@ -23,25 +29,10 @@ class HtmlExtract
 
             $CI->load->library('HtmlEntity', $data);
 
-            $result = $CI->htmlentity;
-        } else if (UrlParseAdapter::is_zh($url)) {
-            $readabilityApi = "https://www.readability.com/api/content/v1/parser?url=" . $url . '&token=7ace6330e4dfcf6dfb2cacb8f11e5b4ee1a487d9';
-            $urlContent = CurlUtil::get_contents_from_url($readabilityApi);
-
-            $readability_json = json_decode($urlContent, true);
-
-            $data = array(
-                'articleTitle' => $readability_json['title'],
-                'articleContent' => $readability_json['content']
-            );
-            $CI->load->library('HtmlEntity', $data);
-
-            $result = $CI->htmlentity;
-        } else {
-            $result = self::get_cotent_from_readablitylib($url, $html);
+            return $CI->htmlentity;
         }
 
-        return $result;
+        return self::get_cotent_from_readablitylib($url, $html);
     }
 
     /**
@@ -141,6 +132,27 @@ class HtmlExtract
     public static function get_charset($urlContent)
     {
         return preg_match("/<meta.+?charset=[^\w]?([-\w]+)/i", $urlContent, $temp) ? strtolower($temp[1]) : "";
+    }
+
+    /**
+     * @param $url
+     * @param $CI
+     * @return mixed
+     */
+    public static function getContentFromReadabilityApi($url, $CI)
+    {
+        $readabilityApi = "https://www.readability.com/api/content/v1/parser?url=" . $url . '&token=7ace6330e4dfcf6dfb2cacb8f11e5b4ee1a487d9';
+        $urlContent = CurlUtil::get_contents_from_url($readabilityApi);
+
+        $readability_json = json_decode($urlContent, true);
+
+        $data = array(
+            'articleTitle' => $readability_json['title'],
+            'articleContent' => $readability_json['content']
+        );
+        $CI->load->library('HtmlEntity', $data);
+
+        return $CI->htmlentity;
     }
 
 }
