@@ -142,7 +142,7 @@ class HtmlExtract
     public static function getContentFromReadabilityApi($url, $CI)
     {
         $readabilityApi = "https://www.readability.com/api/content/v1/parser?url=" . $url . '&token=7ace6330e4dfcf6dfb2cacb8f11e5b4ee1a487d9';
-        $urlContent = CurlUtil::get_contents_from_url($readabilityApi);
+        $urlContent = self::get_contents_from_url($readabilityApi);
 
         $readability_json = json_decode($urlContent, true);
 
