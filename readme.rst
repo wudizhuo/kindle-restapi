@@ -4,7 +4,7 @@ License
 *******
 
 Please see the `license
-agreement https://www.gnu.org/licenses/gpl-3.0.html`_.
+agreement <https://www.gnu.org/licenses/gpl-3.0.html>`_.
 
 *********
 Resources
