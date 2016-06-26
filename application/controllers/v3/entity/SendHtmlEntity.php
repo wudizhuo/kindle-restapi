@@ -123,8 +123,8 @@ class SendHtmlEntity
         if (!is_int(strpos($imgurl, 'http'))) {
             return;
         }
-        // $img=file_get_contents($imgurl);
-        $img = CurlUtil::curl($imgurl);
+
+        $img = UrlUtil::get_content($imgurl);
         if (!empty($img)) {
             $imgPath = tempnam(sys_get_temp_dir(), 'kindle_img');
 

@@ -6,7 +6,6 @@ if (!defined('BASEPATH'))
 
 include './application/libraries/REST_Controller.php';
 include './application/controllers/v3/entity/SendHtmlEntity.php';
-include './application/utils/CurlUtil.php';
 include './application/utils/UrlParseAdapter.php';
 include './application/utils/HtmlExtract.php';
 include './application/utils/UrlUtil.php';
