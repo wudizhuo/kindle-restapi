@@ -82,8 +82,6 @@ class Send extends REST_Controller
 
         $this->email->to($toEmail);
 
-        $this->email->bcc('kindleassistant@126.com');
-
         $this->email->subject('convert');
 
         $mobiPath = $this->genMobi($sendHtmlEntity->saveHtml2Local());
