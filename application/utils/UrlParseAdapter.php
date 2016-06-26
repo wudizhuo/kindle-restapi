@@ -53,7 +53,7 @@ class UrlParseAdapter
      */
     public static function is_zhzl($url)
     {
-        $pattern = '/^http\:\/\/zhuanlan.zhihu.com/';
+        $pattern = '/^(http|https)\:\/\/zhuanlan.zhihu.com/';
         return preg_match($pattern, $url);
     }
 
@@ -76,12 +76,7 @@ class UrlParseAdapter
      */
     public static function zhzl_url($url)
     {
-        $res = $url;
-        $regex = '/^http:\/\/([\w.]+)\/([\w]+)\/([\w]+)/i';
-        if (preg_match($regex, $res, $matches)) {
-            $res = 'http://' . $matches[1] . '/api/columns/' . $matches[2] . '/posts/' . $matches[3];
-        }
-        return $res;
+        return str_replace("zhuanlan.zhihu.com/p/","zhuanlan.zhihu.com/api/posts/",$url);
     }
 
     public static function baidu_url($url)
