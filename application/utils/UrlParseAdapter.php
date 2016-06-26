@@ -34,7 +34,7 @@ class UrlParseAdapter
         return $url;
     }
 
-    function UC_url($url)
+    public static function UC_url($url)
     {
         $res = $url;
         $pattern_UC = '/<iframe src\s*=\s*[\"|\'](.*?)[\"|\'][\s\S]*?>/';
@@ -74,17 +74,17 @@ class UrlParseAdapter
      * @param $url
      * @return mixed
      */
-    function zhzl_url($url)
+    public static function zhzl_url($url)
     {
         $res = $url;
         $regex = '/^http:\/\/([\w.]+)\/([\w]+)\/([\w]+)/i';
-        if(preg_match($regex, $res, $matches)){
-            $res='http://'.$matches[1].'/api/columns/'.$matches[2].'/posts/'.$matches[3];
+        if (preg_match($regex, $res, $matches)) {
+            $res = 'http://' . $matches[1] . '/api/columns/' . $matches[2] . '/posts/' . $matches[3];
         }
         return $res;
     }
 
-    function baidu_url($url)
+    public static function baidu_url($url)
     {
         $url = urldecode($url);
         // 把移动端百度新闻url街去掉
