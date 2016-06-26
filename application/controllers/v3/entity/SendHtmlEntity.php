@@ -127,6 +127,7 @@ class SendHtmlEntity
         $img = UrlUtil::get_content($imgurl);
         if (!empty($img)) {
             $imgPath = tempnam(sys_get_temp_dir(), 'kindle_img');
+            rename($imgPath, $imgPath .= '.png');
 
             $fp = @fopen($imgPath, "w"); // 以写方式打开文件
             @fwrite($fp, $img);
