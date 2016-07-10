@@ -14,22 +14,20 @@ class Upload extends REST_Controller
 {
     public function index_post()
     {
-        $fromEmail = $this->post('from_email');
+        $fromEmail = trim($this->post('from_email'));
         if (!$this->email->valid_email($fromEmail)) {
             $res["code"] = ERROR_CODE_FROM_EMAIL;
             $res["error"] = "请填写正确的发送邮箱";
             $this->response($res, 400);
         }
 
-        $toEmail = $this->post('to_email');
+        $toEmail = trim($this->post('to_email'));
 
         if (!$this->email->valid_email($toEmail)) {
             $res["code"] = ERROR_CODE_TO_EMAIL;
             $res["error"] = "请填写正确的接收邮箱";
             $this->response($res, 400);
         }
-
-        $fileName = $this->post('file_name');
 
         $config['upload_path'] = './uploads/' . date('y-m');
         $config['allowed_types'] = 'gif|jpg|jpeg|png|bmp|txt|pdf|mobi|azw|rtf|html|doc|docx';
@@ -54,8 +52,7 @@ class Upload extends REST_Controller
             //         'created_time' => time(),
             //     )
             // );
-            $res["error"] = '文件格式不支持,请检查文件格式';
-            $res["msg"] = $error['error'];
+            $res["error"] = $error['error'];
             $this->response($res, 404);
         } else {
             $this->load->model('MUser_Uploads');

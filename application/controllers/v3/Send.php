@@ -24,7 +24,7 @@ class Send extends REST_Controller
 
     public function index_post()
     {
-        $fromEmail = $this->post('from_email');
+        $fromEmail = trim($this->post('from_email'));
 
         if (!$this->email->valid_email($fromEmail)) {
             $res["code"] = ERROR_CODE_FROM_EMAIL;
@@ -32,7 +32,7 @@ class Send extends REST_Controller
             $this->response($res, 400);
         }
 
-        $toEmail = $this->post('to_email');
+        $toEmail = trim($this->post('to_email'));
 
         if (!$this->email->valid_email($toEmail)) {
             $res["code"] = ERROR_CODE_TO_EMAIL;
