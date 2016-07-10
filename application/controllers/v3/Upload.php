@@ -53,8 +53,7 @@ class Upload extends REST_Controller
             //         'file_name' => $fileName,
             //         'created_time' => time(),
             //     )
-
-            );
+            // );
             $res["error"] = '文件格式不支持,请检查文件格式';
             $res["msg"] = $error['error'];
             $this->response($res, 404);
@@ -73,7 +72,7 @@ class Upload extends REST_Controller
             //         'file_size' => $data['file_size'],
             //         'created_time' => time(),
             //     )
-            );
+            // );
             $path = $data['full_path'];
             $this->email->clear(TRUE);
             $this->email->from($fromEmail, 'kindle_assistant');
