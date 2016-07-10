@@ -29,15 +29,11 @@ class Upload extends REST_Controller
             $this->response($res, 400);
         }
 
-        $config['upload_path'] = './uploads/' . date('y-m');
+        $config['upload_path'] = sys_get_temp_dir();
         $config['allowed_types'] = 'gif|jpg|jpeg|png|bmp|txt|pdf|mobi|azw|rtf|html|doc|docx';
         $config['max_size'] = 0;//50兆 ;
         $this->load->library('upload', $config);
         $this->upload->initialize($config);
-
-        if (!is_dir($config['upload_path'])) {
-            mkdir($config['upload_path'], 0744);
-        }
 
         if (!$this->upload->do_upload('file')) {
             $error = array('error' => $this->upload->display_errors());
