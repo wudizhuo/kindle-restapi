@@ -96,13 +96,15 @@ class SendHtmlEntity
 
     public function saveHtml2Local()
     {
-        $htmlPath = tempnam(sys_get_temp_dir(), 'kindle');
+        $htmlPath = tempnam(sys_get_temp_dir(), 'kindle_html_');
 
         // 匹配图片下载正则
         $pattern_src = '/<img[\s\S]*?src\s*=\s*[\"|\'](.*?)[\"|\'][\s\S]*?>/';
 
         // 正则替换图片
-        $html = preg_replace_callback($pattern_src, "self::changeImgLocal", $this->toHtml());
+        $html = preg_replace_callback($pattern_src, function ($matches) use ($htmlPath) {
+            return self::changeImgLocal($matches, $htmlPath);
+        }, $this->toHtml());
 
         $fp = @fopen($htmlPath, "w"); // 以写方式打开文件
         @fwrite($fp, $html);
@@ -117,7 +119,7 @@ class SendHtmlEntity
      * @param unknown $matches
      * @return string
      */
-    private function changeImgLocal($matches)
+    private function changeImgLocal($matches, $htmlPath)
     {
         $imgurl = $matches[1];
         if (!is_int(strpos($imgurl, 'http'))) {
@@ -126,7 +128,7 @@ class SendHtmlEntity
 
         $img = UrlUtil::get_content($imgurl);
         if (!empty($img)) {
-            $imgPath = tempnam(sys_get_temp_dir(), 'kindle_img');
+            $imgPath = tempnam(sys_get_temp_dir(), $htmlPath.'_img_');
             rename($imgPath, $imgPath .= '.png');
 
             $fp = @fopen($imgPath, "w"); // 以写方式打开文件

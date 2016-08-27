@@ -75,6 +75,7 @@ class Upload extends REST_Controller
             $this->email->subject($data['file_name'] . '__用户上传');
 
             if ($this->email->send()) {
+                unlink($path);
                 $this->response(null, 201);
             } else {
                 $res["error"] = '发送失败,请联系作者';

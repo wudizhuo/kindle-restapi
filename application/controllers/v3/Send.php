@@ -92,6 +92,7 @@ class Send extends REST_Controller
         }
 
         if ($this->email->send()) {
+            unlink($mobiPath);
             $this->response(null, 201);
         } else {
             $res["error"] = '发送失败,请联系作者';
@@ -116,6 +117,8 @@ class Send extends REST_Controller
         $htmlPathTmp = $htmlPath . ".html";
         rename($htmlPath, $htmlPathTmp);
         exec('kindlegen ' . "$htmlPathTmp", $log);
+        unlink($htmlPathTmp);
+        array_map('unlink', glob(str_replace(".html", "_img_*.png", $htmlPathTmp)));
         return str_replace(".html", ".mobi", $htmlPathTmp);
     }
 
