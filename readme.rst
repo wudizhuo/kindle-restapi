@@ -1,3 +1,4 @@
+Deprecated, please move to https://github.com/wudizhuo/kindle-rest-kotlin
 
 *******
 License
